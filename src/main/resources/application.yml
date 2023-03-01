@@ -16,3 +16,13 @@ spring:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    
+
+logging:
+  level:
+    mars.mars.todos: DEBUG
+
+jwt:
+  header: Authorization
+  secret: RG9uZ3lhbmcgTWlyYWUgVW51dmVyY2lyeSBNYXJzIFNlcXVlcmUgQ2x1YiA0dGggVG9kbyBQcm9qZWN0IEZyb250IGlzIFJlYWN0IGFuZCBTZXJ2ZXIgaXMgU3ByaW5n
+  token-validity-in-seconds: 86400
