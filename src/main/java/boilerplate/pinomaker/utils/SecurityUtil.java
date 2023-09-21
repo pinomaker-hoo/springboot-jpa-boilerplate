@@ -1,7 +1,7 @@
 package boilerplate.pinomaker.utils;
 
 import boilerplate.pinomaker.domain.User;
-import boilerplate.pinomaker.repository.UserJpaRepository;
+import boilerplate.pinomaker.repository.user.UserJpaRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

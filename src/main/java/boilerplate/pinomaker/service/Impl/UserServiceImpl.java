@@ -5,7 +5,7 @@ import boilerplate.pinomaker.dto.RequestLoginUserDto;
 import boilerplate.pinomaker.dto.RequestSaveUserDto;
 import boilerplate.pinomaker.jwt.TokenDto;
 import boilerplate.pinomaker.jwt.TokenProvider;
-import boilerplate.pinomaker.repository.UserJpaRepository;
+import boilerplate.pinomaker.repository.user.UserJpaRepository;
 import boilerplate.pinomaker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import boilerplate.pinomaker.common.dto.RequestResponseDto;

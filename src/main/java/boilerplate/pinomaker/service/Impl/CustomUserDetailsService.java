@@ -1,7 +1,7 @@
 package boilerplate.pinomaker.service.Impl;
 
 import boilerplate.pinomaker.domain.User;
-import boilerplate.pinomaker.repository.UserJpaRepository;
+import boilerplate.pinomaker.repository.user.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
