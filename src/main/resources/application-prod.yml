@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url:
+    username:
+    password:
+
+springfox:
+  documentation:
+    enabled: false
