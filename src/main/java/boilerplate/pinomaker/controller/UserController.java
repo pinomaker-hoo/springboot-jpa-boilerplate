@@ -1,13 +1,13 @@
-package boilerplate.pinomaker.user.controller;
+package boilerplate.pinomaker.controller;
 
+import boilerplate.pinomaker.dto.RequestLoginUserDto;
+import boilerplate.pinomaker.dto.RequestSaveUserDto;
+import boilerplate.pinomaker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import boilerplate.pinomaker.common.dto.RequestResponseDto;
-import boilerplate.pinomaker.user.dto.RequestLoginUserDto;
-import boilerplate.pinomaker.user.dto.RequestSaveUserDto;
-import boilerplate.pinomaker.user.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

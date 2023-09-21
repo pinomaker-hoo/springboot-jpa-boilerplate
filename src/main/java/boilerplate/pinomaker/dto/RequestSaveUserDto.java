@@ -1,4 +1,4 @@
-package boilerplate.pinomaker.user.dto;
+package boilerplate.pinomaker.dto;
 
 import lombok.Data;
 

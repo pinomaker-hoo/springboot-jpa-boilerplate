@@ -1,6 +1,6 @@
-package boilerplate.pinomaker.user.repository;
+package boilerplate.pinomaker.repository;
 
-import boilerplate.pinomaker.user.domain.User;
+import boilerplate.pinomaker.domain.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 

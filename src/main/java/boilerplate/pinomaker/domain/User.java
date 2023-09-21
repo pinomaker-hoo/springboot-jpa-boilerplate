@@ -1,4 +1,4 @@
-package boilerplate.pinomaker.user.domain;
+package boilerplate.pinomaker.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

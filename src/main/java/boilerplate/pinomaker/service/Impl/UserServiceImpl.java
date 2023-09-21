@@ -1,13 +1,14 @@
-package boilerplate.pinomaker.user.service;
+package boilerplate.pinomaker.service.Impl;
 
+import boilerplate.pinomaker.domain.User;
+import boilerplate.pinomaker.dto.RequestLoginUserDto;
+import boilerplate.pinomaker.dto.RequestSaveUserDto;
+import boilerplate.pinomaker.repository.UserJpaRepository;
+import boilerplate.pinomaker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import boilerplate.pinomaker.common.dto.RequestResponseDto;
 import boilerplate.pinomaker.common.dto.UserAuthority;
 import boilerplate.pinomaker.jwt.TokenProvider;
-import boilerplate.pinomaker.user.domain.User;
-import boilerplate.pinomaker.user.dto.RequestLoginUserDto;
-import boilerplate.pinomaker.user.dto.RequestSaveUserDto;
-import boilerplate.pinomaker.user.repository.UserJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

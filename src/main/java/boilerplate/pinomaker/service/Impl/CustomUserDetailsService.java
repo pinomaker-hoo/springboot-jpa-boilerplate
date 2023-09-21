@@ -1,8 +1,8 @@
-package boilerplate.pinomaker.user.service;
+package boilerplate.pinomaker.service.Impl;
 
+import boilerplate.pinomaker.domain.User;
+import boilerplate.pinomaker.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
-import mars4.todos.user.domain.User;
-import mars4.todos.user.repository.UserJpaRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
