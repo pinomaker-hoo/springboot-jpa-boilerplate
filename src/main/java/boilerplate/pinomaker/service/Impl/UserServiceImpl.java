@@ -3,12 +3,13 @@ package boilerplate.pinomaker.service.Impl;
 import boilerplate.pinomaker.domain.User;
 import boilerplate.pinomaker.dto.RequestLoginUserDto;
 import boilerplate.pinomaker.dto.RequestSaveUserDto;
+import boilerplate.pinomaker.jwt.TokenDto;
+import boilerplate.pinomaker.jwt.TokenProvider;
 import boilerplate.pinomaker.repository.UserJpaRepository;
 import boilerplate.pinomaker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import boilerplate.pinomaker.common.dto.RequestResponseDto;
 import boilerplate.pinomaker.common.dto.UserAuthority;
-import boilerplate.pinomaker.jwt.TokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
                 return RequestResponseDto.of(HttpStatus.BAD_REQUEST, RequestResponseDto.Code.FAILED, "사용자를 찾을 수 없습니다.", false);
             }
 
-            if(!passwordEncoder.matches(dto.getPassword(), findUser.get().getPassword())){
+            if (!passwordEncoder.matches(dto.getPassword(), findUser.get().getPassword())) {
                 return RequestResponseDto.of(HttpStatus.BAD_REQUEST, RequestResponseDto.Code.FAILED, "비밀번호가 같지 앖습니다.", false);
             }
 
@@ -71,8 +72,11 @@ public class UserServiceImpl implements UserService {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            TokenDto tokenDto = tokenProvider.generateTokenDto(authenticationToken, "USER");
+
             Map<String, String> response = new HashMap<>();
-            response.put("token", tokenProvider.createToken(dto.getId()));
+            response.put("accessToken", tokenDto.getAccessToken());
+            response.put("refreshToken", tokenDto.getRefreshToken());
             response.put("name", findUser.get().getName());
 
             return RequestResponseDto.of(HttpStatus.OK, RequestResponseDto.Code.SUCCESS, "로그인 성공 하였습니다.", response);

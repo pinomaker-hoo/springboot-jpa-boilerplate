@@ -1,6 +1,5 @@
 package boilerplate.pinomaker.jwt;
 
-import boilerplate.pinomaker.common.dto.UserAuthority;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -13,12 +12,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -26,15 +28,16 @@ public class TokenProvider implements InitializingBean {
 
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String BEARER_TYPE = "bearer";
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24;
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 14;
     private final String secret;
-    private final long tokenValidityInMilliseconds;
     private Key key;
 
-    public TokenProvider(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
+    public TokenProvider(@Value("${jwt.secret}") String secret) {
         this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     @Override
@@ -43,37 +46,56 @@ public class TokenProvider implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createToken(String id) {
-        Claims claims = Jwts.claims();
-        claims.put("id", id);
+
+    public TokenDto generateTokenDto(Authentication authentication, String authority) {
         long now = (new Date()).getTime();
-        return Jwts.builder()
-                .setClaims(claims)
-                .claim(AUTHORITIES_KEY, UserAuthority.ROLE_USER)
-                .setExpiration(new Date(now + tokenValidityInMilliseconds))
+
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authority)
+                .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
+
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        return TokenDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
-    public Authentication getAuthentication(String token) {
-        Claims claims = parseClaims(token);
+
+    public Authentication getAuthentication(String accessToken) {
+        Claims claims = parseClaims(accessToken);
+        if (claims.get(AUTHORITIES_KEY) == null) {
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        }
+
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-        User principal = new User((String) claims.get("id"), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+
+        UserDetails principal = new User(claims.getSubject(), "", authorities);
+
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-    private Claims parseClaims(String accessToken) {
-        try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
+    public Optional<String> resolveToken(final HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken == null || !bearerToken.startsWith("Bearer ")
+                || bearerToken.length() <= "Authorization".length()) {
+            return Optional.empty();
         }
+        return Optional.of(bearerToken.substring(7));
     }
 
-    // 토큰 유효성 검사
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -85,25 +107,19 @@ public class TokenProvider implements InitializingBean {
         } catch (UnsupportedJwtException e) {
             logger.info("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
+            logger.info(e.toString());
             logger.info("JWT 토큰이 잘못되었습니다.");
+
+            return true;
         }
         return false;
     }
 
-    public int customValidateToken(String token) {
+    private Claims parseClaims(String accessToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return 1;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            logger.info("잘못된 JWT 서명입니다.");
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
-            logger.info("만료된 JWT 토큰입니다.");
-            return 2;
-        } catch (UnsupportedJwtException e) {
-            logger.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            logger.info("JWT 토큰이 잘못되었습니다.");
+            return e.getClaims();
         }
-        return 0;
     }
 }

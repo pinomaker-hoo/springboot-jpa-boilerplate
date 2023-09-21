@@ -1,10 +1,10 @@
 package boilerplate.pinomaker.config;
 
-import lombok.RequiredArgsConstructor;
-import boilerplate.pinomaker.jwt.JwtAccessDeniedHandler;
-import boilerplate.pinomaker.jwt.JwtAuthenticationEntryPoint;
-import boilerplate.pinomaker.jwt.JwtSecurityConfig;
+import boilerplate.pinomaker.jwt.AuthEntryPointJwt;
+import boilerplate.pinomaker.jwt.JwtAuthenticationFilter;
 import boilerplate.pinomaker.jwt.TokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -20,25 +20,19 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Collections;
-
+import java.util.Arrays;
 
 @EnableWebSecurity
 @EnableMethodSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final TokenProvider tokenProvider;
+    private final AuthEntryPointJwt authEntryPointJwt;
 
-    private final String[] AUTH_WHITELIST = {
-            // -- Swagger UI v2
-            "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui.html", "/webjars/**", "/swagger-ui/**",
-            // other public endpoints of your API may be appended to this array
-            "/**", "/api/user", "/api/user/login", "/api/**", "/swagger-ui/index.html"};
-
+    @Value("${skip.resources}")
+    private String[] skipResources;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -47,24 +41,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors();
-
-        httpSecurity.cors()
-                .configurationSource(corsConfigurationSource())
+        httpSecurity
+                .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .csrf().disable()
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers(AUTH_WHITELIST).permitAll()
-                .anyRequest().permitAll()
-                .and().apply(new JwtSecurityConfig(tokenProvider));
+                .antMatchers(skipResources).permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(authEntryPointJwt)
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
@@ -75,7 +69,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.setAllowedOriginPatterns(Collections.singletonList("*"));
+        config.setAllowedOrigins(Arrays.asList("*"));
         source.registerCorsConfiguration("/**", config);
         return source;
     }
