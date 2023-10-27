@@ -13,7 +13,7 @@ public class IpAddressUtil {
             ip = request.getHeader("Proxy-Client-IP");
         }
         if (ip == null) {
-            ip = request.getHeader("WL-Proxy-Client-IP"); // 웹로직
+            ip = request.getHeader("WL-Proxy-Client-IP");
         }
         if (ip == null) {
             ip = request.getHeader("HTTP_CLIENT_IP");
