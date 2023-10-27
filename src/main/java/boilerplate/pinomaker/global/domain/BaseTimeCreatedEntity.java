@@ -1,4 +1,4 @@
-package boilerplate.pinomaker.global.common.domain;
+package boilerplate.pinomaker.global.domain;
 
 import lombok.Getter;
 import org.hibernate.annotations.Comment;

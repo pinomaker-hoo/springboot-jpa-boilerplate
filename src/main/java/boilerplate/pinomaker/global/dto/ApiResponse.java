@@ -1,4 +1,4 @@
-package boilerplate.pinomaker.global.common.dto;
+package boilerplate.pinomaker.global.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;

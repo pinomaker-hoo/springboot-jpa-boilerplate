@@ -1,4 +1,4 @@
-package boilerplate.pinomaker.global.common.domain;
+package boilerplate.pinomaker.global.domain;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

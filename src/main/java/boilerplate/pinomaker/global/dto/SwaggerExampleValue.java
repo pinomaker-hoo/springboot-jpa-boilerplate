@@ -1,4 +1,4 @@
-package boilerplate.pinomaker.global.common.dto;
+package boilerplate.pinomaker.global.dto;
 
 public class SwaggerExampleValue {
     public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";

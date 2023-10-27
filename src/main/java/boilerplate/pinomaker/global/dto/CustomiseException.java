@@ -1,4 +1,4 @@
-package boilerplate.pinomaker.global.common.dto;
+package boilerplate.pinomaker.global.dto;
 
 
 import org.apache.commons.lang3.StringUtils;

@@ -1,7 +1,7 @@
 package boilerplate.pinomaker.global.jwt;
 
-import boilerplate.pinomaker.global.common.dto.ApiResponse;
-import boilerplate.pinomaker.global.common.dto.ErrorMessage;
+import boilerplate.pinomaker.global.dto.ApiResponse;
+import boilerplate.pinomaker.global.dto.ErrorMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package boilerplate.pinomaker.global.jwt;
 
-import boilerplate.pinomaker.global.common.dto.ApiResponse;
-import boilerplate.pinomaker.global.common.dto.ErrorMessage;
+import boilerplate.pinomaker.global.dto.ApiResponse;
+import boilerplate.pinomaker.global.dto.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

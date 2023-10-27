@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import boilerplate.pinomaker.global.common.domain.BaseTimeEntity;
-import boilerplate.pinomaker.global.common.dto.UserAuthority;
+import boilerplate.pinomaker.global.domain.BaseTimeEntity;
+import boilerplate.pinomaker.global.dto.UserAuthority;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
