@@ -3,7 +3,6 @@ package boilerplate.pinomaker.global.config;
 import boilerplate.pinomaker.global.interceptor.JwtInterceptor;
 import boilerplate.pinomaker.global.interceptor.LoggingInterceptor;
 import boilerplate.pinomaker.global.jwt.JwtTokenExtractor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +33,7 @@ public class CustomWebMvcConfigurer extends WebMvcConfigurationSupport {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor(jwtTokenExtractor))
                 .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/user/**")
+                .excludePathPatterns("/api/auth/**")
                 .order(1);
 
         registry.addInterceptor(new LoggingInterceptor())
