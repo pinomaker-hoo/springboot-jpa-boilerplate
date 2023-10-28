@@ -1,4 +1,4 @@
-package boilerplate.pinomaker.global.jwt;
+package boilerplate.pinomaker.global.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,5 +1,6 @@
 package boilerplate.pinomaker.global.jwt;
 
+import boilerplate.pinomaker.global.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -90,7 +91,7 @@ public class TokenProvider implements InitializingBean {
     public Optional<String> resolveToken(final HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken == null || !bearerToken.startsWith("Bearer ")
-                || bearerToken.length() <= "Authorization".length()) {
+                || bearerToken.length() <= "Auhorization".length()) {
             return Optional.empty();
         }
         return Optional.of(bearerToken.substring(7));

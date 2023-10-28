@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import boilerplate.pinomaker.global.dto.RequestResponseDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "중복된 닉네임 입니다.", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"status\":404,\"message\":\"작물 정보를 찾을 수 없습니다.\"}")})),
             @ApiResponse(responseCode = "500", description = SwaggerExampleValue.INTERNAL_SERVER_ERROR, content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExampleValue.INTERNAL_SERVER_ERROR_REPONSE)))})
     @PostMapping()
-    public RequestResponseDto<?> saveUser(@RequestBody RequestSaveUserDto dto) {
+    public ResponseEntity<?> saveUser(@RequestBody RequestSaveUserDto dto) {
         return userService.save(dto);
     }
 
@@ -44,7 +44,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "중복된 닉네임 입니다.", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"status\":404,\"message\":\"작물 정보를 찾을 수 없습니다.\"}")})),
             @ApiResponse(responseCode = "500", description = SwaggerExampleValue.INTERNAL_SERVER_ERROR, content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExampleValue.INTERNAL_SERVER_ERROR_REPONSE)))})
     @PostMapping("/login")
-    public RequestResponseDto<?> login(@RequestBody RequestLoginUserDto dto) {
+    public ResponseEntity<?> login(@RequestBody RequestLoginUserDto dto) {
         return userService.login(dto);
     }
 }
