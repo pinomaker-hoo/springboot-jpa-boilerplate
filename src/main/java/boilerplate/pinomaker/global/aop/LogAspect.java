@@ -23,33 +23,9 @@ public class LogAspect {
 
     @Before("controller()")
     public void beforeRequest(JoinPoint joinPoint) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-
-        String url = request.getRequestURI();
-        String method = request.getMethod();
-
-        log.info("{} : {}", method, url);
-
-        Object[] args = joinPoint.getArgs();
-        for (Object arg : args) {
-            if (arg instanceof Map) {
-                Map<String, String[]> paramMap = (Map<String, String[]>) arg;
-                paramMap.forEach((key, value) -> log.info("Request Param : {} : {}", key, String.join(", ", value)));
-
-                return;
-            } else {
-                log.info("Request Body : {}", arg.toString());
-
-                return;
-            }
-        }
     }
 
     @AfterReturning(pointcut = "controller()", returning = "returnValue")
     public void afterReturningLogging(JoinPoint joinPoint, Object returnValue) {
-        if (returnValue == null) return;
-
-        log.info("Response : {}", returnValue.toString());
     }
 }
