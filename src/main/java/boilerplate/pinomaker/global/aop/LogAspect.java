@@ -17,7 +17,7 @@ import java.util.Map;
 @Aspect
 @Slf4j
 public class LogAspect {
-    @Pointcut("within(boilerplate.pinomaker.controller.*)")
+    @Pointcut("within(boilerplate.pinomaker.api.*.ui.*)")
     public void controller() {
     }
 

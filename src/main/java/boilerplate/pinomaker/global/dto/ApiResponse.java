@@ -10,7 +10,8 @@ import org.springframework.http.ResponseEntity;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
-    private int status;
+    private int code;
+    private HttpStatus status;
     private T data;
     private String message;
     private Pagination pagination;
@@ -22,7 +23,8 @@ public class ApiResponse<T> {
     }
 
     private ApiResponse(ApiResponseBuilder<T> builder) {
-        this.status = builder.status;
+        this.code = builder.code;
+        this.status = builder.httpStatus;
         this.data = builder.data;
         this.pagination = builder.paging;
         this.message = builder.message;
@@ -33,7 +35,7 @@ public class ApiResponse<T> {
     }
 
     public static class ApiResponseBuilder<T> {
-        private int status = HttpStatus.OK.value();
+        private int code = HttpStatus.OK.value();
         private HttpStatus httpStatus = HttpStatus.OK;
         private T data;
         private String message;
@@ -42,7 +44,7 @@ public class ApiResponse<T> {
 
         public ApiResponseBuilder<T> status(int status) {
             if (status > 99) {
-                this.status = status;
+                this.code = status;
                 this.httpStatus = HttpStatus.valueOf(status);
             }
             return this;
