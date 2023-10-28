@@ -1,4 +1,4 @@
-package boilerplate.pinomaker.api.user.service.Impl;
+package boilerplate.pinomaker.api.auth.service.Impl;
 
 import boilerplate.pinomaker.api.user.domain.User;
 import boilerplate.pinomaker.api.user.repository.UserJpaRepository;
