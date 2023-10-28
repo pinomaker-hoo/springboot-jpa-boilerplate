@@ -52,17 +52,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({Exception.class, RuntimeException.class})
     public ResponseEntity<ErrorResponse> handleInternalServerError(Exception e) {
-        log.error("[INTERNAL SERVER ERROR] Message : " + e.getMessage());
         return errorResponse(e, INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ServerException.class)
     protected ResponseEntity<ErrorResponse> handleServerException(final ServerException e) {
-        log.error("handleEntityNotFoundException : " + e.getErrorCode());
         return errorResponse(e, INTERNAL_SERVER_ERROR);
     }
 
     private ResponseEntity<ErrorResponse> errorResponse(Exception e, HttpStatus httpStatus) {
+        log.error("[LOG] {} ({}) : {}", httpStatus, httpStatus.value(), e.getMessage());
         return new ResponseEntity<>(new ErrorResponse(e.getMessage(), httpStatus.value(), httpStatus), httpStatus);
     }
 }
