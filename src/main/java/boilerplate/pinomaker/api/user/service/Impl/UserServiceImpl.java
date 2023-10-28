@@ -5,6 +5,8 @@ import boilerplate.pinomaker.api.user.event.dto.RequestLoginUserDto;
 import boilerplate.pinomaker.api.user.event.dto.RequestSaveUserDto;
 import boilerplate.pinomaker.global.dto.CommonResponse;
 import boilerplate.pinomaker.global.dto.TokenDto;
+import boilerplate.pinomaker.global.exception.BadRequestException;
+import boilerplate.pinomaker.global.exception.NotFoundException;
 import boilerplate.pinomaker.global.jwt.TokenProvider;
 import boilerplate.pinomaker.api.user.repository.UserJpaRepository;
 import boilerplate.pinomaker.api.user.service.UserService;
@@ -32,34 +34,35 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public ResponseEntity<?> save(RequestSaveUserDto dto) {
+    public ResponseEntity<?> save(RequestSaveUserDto dto) throws Exception {
         Optional<User> findUser = userJpaRepository.findUserById(dto.getId());
-//            if (findUser.isPresent()) {
-//                return RequestResponseDto.of(HttpStatus.BAD_REQUEST, RequestResponseDto.Code.FAILED, "이미 존재 하는 계정 입니다.", false);
-//            }
 
-        User saveUser = User.builder()
+        if (findUser.isPresent()) {
+            throw new BadRequestException("이미 존재하는 계정 입니다.");
+        }
+
+        userJpaRepository.save(User.builder()
                 .id(dto.getId())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .name(dto.getName())
                 .authority(UserAuthority.ROLE_USER)
-                .build();
+                .build());
 
         return CommonResponse.createResponseMessage(HttpStatus.OK.value(), "회원가입에 성공하였습니다.");
     }
 
     @Override
-    public ResponseEntity<?> login(RequestLoginUserDto dto) {
+    public ResponseEntity<?> login(RequestLoginUserDto dto) throws Exception {
 
         Optional<User> findUser = userJpaRepository.findUserById(dto.getId());
 
-//        if (findUser.isEmpty()) {
-//            return RequestResponseDto.of(HttpStatus.BAD_REQUEST, RequestResponseDto.Code.FAILED, "사용자를 찾을 수 없습니다.", false);
-//        }
-//
-//        if (!passwordEncoder.matches(dto.getPassword(), findUser.get().getPassword())) {
-//            return RequestResponseDto.of(HttpStatus.BAD_REQUEST, RequestResponseDto.Code.FAILED, "비밀번호가 같지 앖습니다.", false);
-//        }
+        if (findUser.isEmpty()) {
+            throw new NotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        if (!passwordEncoder.matches(dto.getPassword(), findUser.get().getPassword())) {
+            throw new BadRequestException("비밀번호가 같지 않습니다.");
+        }
 
         UsernamePasswordAuthenticationToken authenticationToken = dto.toAuthentication();
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);

@@ -32,7 +32,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "중복된 닉네임 입니다.", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"status\":404,\"message\":\"작물 정보를 찾을 수 없습니다.\"}")})),
             @ApiResponse(responseCode = "500", description = SwaggerExampleValue.INTERNAL_SERVER_ERROR, content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExampleValue.INTERNAL_SERVER_ERROR_REPONSE)))})
     @PostMapping()
-    public ResponseEntity<?> saveUser(@RequestBody RequestSaveUserDto dto) {
+    public ResponseEntity<?> saveUser(@RequestBody RequestSaveUserDto dto) throws Exception {
         return userService.save(dto);
     }
 
@@ -44,7 +44,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "중복된 닉네임 입니다.", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"status\":404,\"message\":\"작물 정보를 찾을 수 없습니다.\"}")})),
             @ApiResponse(responseCode = "500", description = SwaggerExampleValue.INTERNAL_SERVER_ERROR, content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExampleValue.INTERNAL_SERVER_ERROR_REPONSE)))})
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody RequestLoginUserDto dto) {
+    public ResponseEntity<?> login(@RequestBody RequestLoginUserDto dto) throws Exception {
         return userService.login(dto);
     }
 }
