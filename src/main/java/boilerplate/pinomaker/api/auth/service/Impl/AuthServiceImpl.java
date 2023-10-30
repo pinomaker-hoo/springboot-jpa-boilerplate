@@ -11,7 +11,6 @@ import boilerplate.pinomaker.global.exception.NotFoundException;
 import boilerplate.pinomaker.global.jwt.JwtTokenProvider;
 import boilerplate.pinomaker.api.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
-import boilerplate.pinomaker.global.dto.UserAuthority;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,17 +29,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<?> save(RequestSaveUserDto dto) throws Exception {
-        Optional<User> findUser = userJpaRepository.findUserById(dto.getId());
+        Optional<User> findUser = userJpaRepository.findUserByUsername(dto.getUsername());
 
         if (findUser.isPresent()) {
             throw new BadRequestException("이미 존재하는 계정 입니다.");
         }
 
         userJpaRepository.save(User.builder()
-                .id(dto.getId())
+                .username(dto.getUsername())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .name(dto.getName())
-                .authority(UserAuthority.ROLE_USER)
                 .build());
 
         return CommonResponse.createResponseMessage(HttpStatus.OK.value(), "회원가입에 성공하였습니다.");
@@ -48,8 +46,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<?> login(RequestLoginUserDto dto) throws Exception {
-
-        Optional<User> findUser = userJpaRepository.findUserById(dto.getId());
+        Optional<User> findUser = userJpaRepository.findUserByUsername(dto.getUsername());
 
         if (findUser.isEmpty()) {
             throw new NotFoundException("사용자를 찾을 수 없습니다.");
@@ -59,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("비밀번호가 같지 않습니다.");
         }
 
-        TokenDto tokenDto = jwtTokenProvider.issueToken(findUser.get().getIdx(), 3600L, 3600L);
+        TokenDto tokenDto = jwtTokenProvider.issueToken(findUser.get().getId());
 
         Map<String, String> response = new HashMap<>();
         response.put("accessToken", tokenDto.getAccessToken());

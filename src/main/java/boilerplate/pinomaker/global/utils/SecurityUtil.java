@@ -14,7 +14,7 @@ public class SecurityUtil {
         if (authentication == null || authentication.getName() == null) {
             throw new RuntimeException("No authentication information.");
         }
-        Optional<User> findUser = userJpaRepository.findUserById(authentication.getName());
+        Optional<User> findUser = userJpaRepository.findUserByUsername(authentication.getName());
         if (findUser.isEmpty()) {
             throw new RuntimeException("No authentication information.");
         }

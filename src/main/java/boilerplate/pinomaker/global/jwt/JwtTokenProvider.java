@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.PrivateKey;
@@ -21,9 +22,15 @@ public class JwtTokenProvider {
     private final JwtConfig jwtConfig;
     private final EncryptionUtils encryptionUtils;
 
-    public TokenDto issueToken(Long userId, Long tokenValidationTime, Long refreshTokenValidationTime) {
-        final String accessToken = generateToken(userId, tokenValidationTime);
-        final String refreshToken = generateToken(userId, refreshTokenValidationTime);
+    @Value("${jwt.accessTokenValidityInSeconds}")
+    private String accessTokenValidationTime;
+
+    @Value("${jwt.refreshTokenValidityInSeconds}")
+    private String refreshTokenValidationTime;
+
+    public TokenDto issueToken(Long userId) {
+        final String accessToken = generateToken(userId, Long.valueOf(accessTokenValidationTime));
+        final String refreshToken = generateToken(userId, Long.valueOf(refreshTokenValidationTime));
 
         return TokenDto.builder()
                 .accessToken(accessToken)
@@ -31,8 +38,8 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    public TokenDto reissueToken(Long userId, Long tokenValidationTime, String refreshToken) {
-        final String accessToken = generateToken(userId, tokenValidationTime);
+    public TokenDto reissueToken(Long userId, String refreshToken) {
+        final String accessToken = generateToken(userId, Long.valueOf(accessTokenValidationTime));
 
         return TokenDto.builder()
                 .accessToken(accessToken)

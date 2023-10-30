@@ -7,8 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface UserJpaRepository extends JpaRepository<User, Long>, UserCustomRepository {
-    Optional<User> findUserById(String id);
-
-    @EntityGraph(attributePaths = "authorities")
-    Optional<User> findOneWithAuthoritiesById(String name);
+    Optional<User> findUserByUsername(String username);
 }

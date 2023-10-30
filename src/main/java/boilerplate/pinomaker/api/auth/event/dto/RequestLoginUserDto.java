@@ -1,13 +1,9 @@
 package boilerplate.pinomaker.api.auth.event.dto;
 
 import lombok.Data;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @Data
 public class RequestLoginUserDto {
-    private String id;
+    private String username;
     private String password;
-    public UsernamePasswordAuthenticationToken toAuthentication( ){
-        return new UsernamePasswordAuthenticationToken(id, password);
-    }
 }
