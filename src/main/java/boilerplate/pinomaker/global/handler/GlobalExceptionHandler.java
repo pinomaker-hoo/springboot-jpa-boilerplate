@@ -32,12 +32,19 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            MethodArgumentNotValidException.class,
-            ValidationException.class,
             BadRequestException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequestException(Exception e) {
         return errorResponse(e, BAD_REQUEST);
+    }
+
+    @ExceptionHandler({
+            MethodArgumentNotValidException.class,
+            ValidationException.class,
+    })
+    public ResponseEntity<ErrorResponse> handleValidationException(Exception e) {
+        log.error("[LOG] {} ({}) : {}", BAD_REQUEST, BAD_REQUEST.value(), "입력값을 확인해주세요.");
+        return new ResponseEntity<>(new ErrorResponse("입력값을 확인해주세요.", BAD_REQUEST.value(), BAD_REQUEST), BAD_REQUEST);
     }
 
     @ExceptionHandler({ForbiddenException.class})
