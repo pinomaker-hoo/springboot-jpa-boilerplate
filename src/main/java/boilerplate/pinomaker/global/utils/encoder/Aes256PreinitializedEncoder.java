@@ -1,4 +1,4 @@
-package boilerplate.pinomaker.global.utils;
+package boilerplate.pinomaker.global.utils.encoder;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;

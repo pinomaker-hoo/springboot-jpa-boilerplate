@@ -1,5 +1,6 @@
 package boilerplate.pinomaker.global.utils;
 
+import boilerplate.pinomaker.global.utils.encoder.Aes256PreinitializedEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
