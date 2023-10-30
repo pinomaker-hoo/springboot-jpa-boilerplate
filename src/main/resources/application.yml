@@ -74,7 +74,7 @@ jwt:
   refreshTokenValidityInSeconds: 604800
 
 encryptUtil:
-  secret: ENC(+46PvWTHnJ3s1v8/ZKEBIm6/CHm3HfC34Qvc+Aoecfg5jl0TWEctiM65xYVFJa33BAH5TPIjIQzDzaLzGOx7k6HvCVmZhu4YqDUPXUmaZw4=)
+  secret: pinopinopinopino
 
 skip:
   resources: /api/**, /api/health/**, /api/auth/**, /h2-console/**,/v3/api-docs,/v3/api-docs/**,/swagger-ui/**,/v2/api-docs/**,/swagger-ui/index.html
