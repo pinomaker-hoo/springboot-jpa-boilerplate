@@ -10,8 +10,6 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static java.security.KeyRep.Type.SECRET;
-
 /**
  * JWT 토큰에 있는 유저 정보 추출 클래스
  */
