@@ -31,7 +31,7 @@ jwt:
   header: Authorization
   secret: RG9uZ3lhbmcgTWlyYWUgVW51dmVyY2lyeSBNYXJzIFNlcXVlcmUgQ2x1YiA0dGggVG9kbyBQcm9qZWN0IEZyb250IGlzIFJlYWN0IGFuZCBTZXJ2ZXIgaXMgU3ByaW5n
   token-validity-in-seconds: 86400
-  private-key: | #multi-line don't erase 
+  private-key: | 
     -----BEGIN PRIVATE KEY-----
     MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCDoxgcKAvtmy0d
     DZonFTNChz/ieazVTbuRxwJj1pOCxnja/1lHIiJ62e7xlMrSZ/HG4i5uWqA3GQjn
