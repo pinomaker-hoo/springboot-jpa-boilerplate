@@ -1,6 +1,7 @@
 package boilerplate.pinomaker.global.jwt;
 
 import boilerplate.pinomaker.global.dto.TokenDto;
+import boilerplate.pinomaker.global.enums.UserRole;
 import boilerplate.pinomaker.global.utils.EncryptionUtils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -28,9 +29,9 @@ public class JwtTokenProvider {
     @Value("${jwt.refreshTokenValidityInSeconds}")
     private String refreshTokenValidationTime;
 
-    public TokenDto issueToken(Long userId) {
-        final String accessToken = generateToken(userId, Long.valueOf(accessTokenValidationTime));
-        final String refreshToken = generateToken(userId, Long.valueOf(refreshTokenValidationTime));
+    public TokenDto issueToken(Long userId, UserRole role) {
+        final String accessToken = generateToken(userId, role, Long.valueOf(accessTokenValidationTime));
+        final String refreshToken = generateToken(userId, role, Long.valueOf(refreshTokenValidationTime));
 
         return TokenDto.builder()
                 .accessToken(accessToken)
@@ -38,8 +39,8 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    public TokenDto reissueToken(Long userId, String refreshToken) {
-        final String accessToken = generateToken(userId, Long.valueOf(accessTokenValidationTime));
+    public TokenDto reissueToken(Long userId, UserRole role, String refreshToken) {
+        final String accessToken = generateToken(userId, role, Long.valueOf(accessTokenValidationTime));
 
         return TokenDto.builder()
                 .accessToken(accessToken)
@@ -47,8 +48,8 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    private String generateToken(Long userId, Long tokenValidationTime) {
-        final Map<String, Object> claims = createClaims(userId);
+    private String generateToken(Long userId, UserRole role, Long tokenValidationTime) {
+        final Map<String, Object> claims = createClaims(userId, role);
         final PrivateKey privateKey = jwtConfig.getPrivateKey();
 
         return Jwts.builder()
@@ -59,13 +60,13 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    private Map<String, Object> createClaims(Long userId) {
+    private Map<String, Object> createClaims(Long userId, UserRole role) {
         Map<String, Object> claims = new HashMap<>();
         String encodedId = encryptionUtils.encrypt(String.valueOf(userId));
         log.info("ID : {}", userId);
 
         claims.put("id", encodedId);
-
+        claims.put("role", role);
         return claims;
     }
 }

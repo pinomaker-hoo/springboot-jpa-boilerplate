@@ -1,5 +1,6 @@
 package boilerplate.pinomaker.api.user.domain;
 
+import boilerplate.pinomaker.global.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,4 +32,8 @@ public class User extends BaseTimeEntity {
     @Comment("이름")
     @Column(nullable = false,length = 50)
     private String name;
+
+    @Comment("역할")
+    @Column(nullable = false)
+    private UserRole role;
 }

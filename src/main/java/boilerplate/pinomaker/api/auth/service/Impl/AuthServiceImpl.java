@@ -6,6 +6,7 @@ import boilerplate.pinomaker.api.auth.service.AuthService;
 import boilerplate.pinomaker.api.user.domain.User;
 import boilerplate.pinomaker.global.dto.CommonResponse;
 import boilerplate.pinomaker.global.dto.TokenDto;
+import boilerplate.pinomaker.global.enums.UserRole;
 import boilerplate.pinomaker.global.exception.BadRequestException;
 import boilerplate.pinomaker.global.exception.NotFoundException;
 import boilerplate.pinomaker.global.jwt.JwtTokenProvider;
@@ -39,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
                 .username(dto.getUsername())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .name(dto.getName())
+                .role(UserRole.ROLE_MEMBER)
                 .build());
 
         return CommonResponse.createResponseMessage(HttpStatus.OK.value(), "회원가입에 성공하였습니다.");
@@ -56,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("비밀번호가 같지 않습니다.");
         }
 
-        TokenDto tokenDto = jwtTokenProvider.issueToken(findUser.get().getId());
+        TokenDto tokenDto = jwtTokenProvider.issueToken(findUser.get().getId(), findUser.get().getRole());
 
         Map<String, String> response = new HashMap<>();
         response.put("accessToken", tokenDto.getAccessToken());
